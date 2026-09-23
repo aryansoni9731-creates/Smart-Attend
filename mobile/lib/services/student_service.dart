@@ -27,8 +27,6 @@ class StudentService {
       }),
     );
 
-    print("STATUS CODE: ${response.statusCode}");
-    print("BODY: ${response.body}");
 
     if (response.body.isEmpty) {
       return {

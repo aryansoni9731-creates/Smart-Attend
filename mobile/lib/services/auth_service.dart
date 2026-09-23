@@ -11,7 +11,6 @@ class AuthService {
     required String enrollmentId,
     required String password,
   }) async {
-    print("Login started");
 
     final String deviceId = await _deviceService.getDeviceId();
 
@@ -25,9 +24,7 @@ class AuthService {
       }),
     );
 
-    print("Device ID: $deviceId");
-    print("Status Code: ${response.statusCode}");
-    print("Response: ${response.body}");
+
 
     return {
       "statusCode": response.statusCode,

@@ -39,15 +39,13 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   Future<void> loadTeacher() async {
     final data = await storage.getUserData();
 
-    print("Loaded Teacher: $data");
-
     if (!mounted) return;
 
     setState(() {
       teacher = data;
     });
   }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -224,11 +222,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                           .getSessionAttendance(sessionId);
                       final students = attendance["data"]["students"] ?? [];
 
-                      print("Students List:");
-                      print(students);
 
-                      print("Total Students:");
-                      print(students.length);
 
                       int count = 0;
 
@@ -244,7 +238,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
 
                         totalPresent = count;
                       });
-                      debugPrint("FINAL COUNT BEFORE SUMMARY: $totalPresent");
+                      if (!mounted) return;
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -283,6 +277,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                         },
                       );
                     } else {
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(result["data"]["message"])),
                       );
@@ -330,15 +325,18 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                         attendanceRunning = true;
                       });
 
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Attendance Started")),
                       );
                     } else {
+                      if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(result["data"]["message"])),
                       );
                     }
                   } catch (e) {
+                    if (!mounted) return;
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(SnackBar(content: Text(e.toString())));

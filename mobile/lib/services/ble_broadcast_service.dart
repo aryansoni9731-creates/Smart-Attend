@@ -22,7 +22,6 @@ class BleBroadcastService {
     }
 
     try {
-      print("STARTING BLE BROADCAST");
 
       final advertiseData = AdvertiseData(
         serviceUuid: serviceUuid,
@@ -33,7 +32,6 @@ class BleBroadcastService {
 
       _isBroadcasting = true;
 
-      print("BLE BROADCAST STARTED");
     } catch (e) {
       _isBroadcasting = false;
       throw StateError('Could not start the Bluetooth attendance beacon: $e');

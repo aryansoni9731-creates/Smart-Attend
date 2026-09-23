@@ -15,7 +15,7 @@ class SessionService {
     required String subject,
   }) async {
     final url = Uri.parse("${ApiConstants.baseUrl}/api/session/start");
-    print("SESSION URL: $url");
+
     final response = await http.post(
       url,
 

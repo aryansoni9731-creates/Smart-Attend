@@ -60,7 +60,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         await storage.saveRole("teacher");
         await storage.setLoggedIn(true);
         await storage.saveUserData(response["teacher"]);
-        print("Saved Teacher: ${response["teacher"]}");
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const TeacherDashboardScreen()),
@@ -76,6 +76,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         loading = false;
       });
 
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.toString())));

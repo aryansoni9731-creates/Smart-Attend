@@ -12,8 +12,7 @@ class ExcelExportService {
     required List<dynamic> students,
   }) async {
     try {
-      print("========== EXCEL EXPORT STARTED ==========");
-      print("Students Count: ${students.length}");
+
 
       final excel = Excel.createExcel();
       final sheet = excel['Attendance'];
@@ -31,7 +30,6 @@ class ExcelExportService {
 
       // Student Data
       for (final student in students) {
-        print(student);
 
         sheet.appendRow([
           TextCellValue(student["rollNo"]?.toString() ?? ""),
@@ -46,35 +44,28 @@ class ExcelExportService {
 
       final directory = await getApplicationDocumentsDirectory();
 
-      print("Directory:");
-      print(directory.path);
 
       final file = File(
-        "${directory.path}/Attendance_${subject}_Sem${semester}_${section}.xlsx",
+        "${directory.path}/Attendance_${subject}_Sem${semester}_$section.xlsx",
       );
 
       final bytes = excel.encode();
 
       if (bytes == null) {
-        print("Excel encode returned null");
+
         return;
       }
 
       await file.writeAsBytes(bytes, flush: true);
 
-      print("Excel Saved Successfully");
-      print(file.path);
 
       final result = await OpenFilex.open(file.path);
 
-      print("Open Result:");
-      print(result);
 
-      print("========== EXCEL EXPORT FINISHED ==========");
     } catch (e, stackTrace) {
-      print("EXCEL EXPORT ERROR");
-      print(e);
-      print(stackTrace);
+
+
+
     }
   }
 }
