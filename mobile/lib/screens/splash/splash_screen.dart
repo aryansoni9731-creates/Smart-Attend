@@ -32,13 +32,9 @@ class _SplashScreenState extends State<SplashScreen> {
     String? role = await storage.getRole();
     final user = await storage.getUserData();
 
-    print("Logged In: $loggedIn");
-    print("Role: $role");
-    print("User: $user");
+    if (!mounted) return;
 
     if (loggedIn && role != null) {
-      if (!mounted) return;
-
       if (role == "student") {
         Navigator.pushReplacement(
           context,

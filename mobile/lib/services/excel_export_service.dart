@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:excel/excel.dart';
@@ -12,8 +13,6 @@ class ExcelExportService {
     required List<dynamic> students,
   }) async {
     try {
-
-
       final excel = Excel.createExcel();
       final sheet = excel['Attendance'];
 
@@ -30,7 +29,6 @@ class ExcelExportService {
 
       // Student Data
       for (final student in students) {
-
         sheet.appendRow([
           TextCellValue(student["rollNo"]?.toString() ?? ""),
           TextCellValue(student["enrollmentId"]?.toString() ?? ""),
@@ -44,7 +42,6 @@ class ExcelExportService {
 
       final directory = await getApplicationDocumentsDirectory();
 
-
       final file = File(
         "${directory.path}/Attendance_${subject}_Sem${semester}_$section.xlsx",
       );
@@ -52,20 +49,19 @@ class ExcelExportService {
       final bytes = excel.encode();
 
       if (bytes == null) {
-
         return;
       }
 
       await file.writeAsBytes(bytes, flush: true);
 
-
-      final result = await OpenFilex.open(file.path);
-
-
+      await OpenFilex.open(file.path);
     } catch (e, stackTrace) {
-
-
-
+      developer.log(
+        'Failed to export attendance workbook',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
     }
   }
 }

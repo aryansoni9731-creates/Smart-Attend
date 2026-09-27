@@ -45,6 +45,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
       teacher = data;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +60,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             onPressed: () async {
               await storage.logout();
 
-              if (!mounted) return;
+              if (!context.mounted) return;
 
               Navigator.pushAndRemoveUntil(
                 context,
@@ -90,7 +91,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             const SizedBox(height: 30),
 
             DropdownButtonFormField<String>(
-              value: selectedSubject,
+              initialValue: selectedSubject,
               decoration: const InputDecoration(
                 labelText: "Subject",
                 border: OutlineInputBorder(),
@@ -124,7 +125,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             const SizedBox(height: 20),
 
             DropdownButtonFormField<int>(
-              value: selectedSemester,
+              initialValue: selectedSemester,
               decoration: const InputDecoration(
                 labelText: "Semester",
                 border: OutlineInputBorder(),
@@ -142,7 +143,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
             const SizedBox(height: 20),
 
             DropdownButtonFormField<String>(
-              value: selectedSection,
+              initialValue: selectedSection,
               decoration: const InputDecoration(
                 labelText: "Section",
                 border: OutlineInputBorder(),
@@ -222,8 +223,6 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                           .getSessionAttendance(sessionId);
                       final students = attendance["data"]["students"] ?? [];
 
-
-
                       int count = 0;
 
                       if (attendance["statusCode"] == 200) {
@@ -233,12 +232,14 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                             0;
                       }
 
+                      if (!mounted) return;
+
                       setState(() {
                         attendanceRunning = false;
 
                         totalPresent = count;
                       });
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -257,12 +258,24 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                                 icon: const Icon(Icons.table_view),
                                 label: const Text("Excel"),
                                 onPressed: () async {
-                                  await excelExportService.exportAttendance(
-                                    subject: selectedSubject!,
-                                    semester: selectedSemester!,
-                                    section: selectedSection!,
-                                    students: students,
-                                  );
+                                  try {
+                                    await excelExportService.exportAttendance(
+                                      subject: selectedSubject!,
+                                      semester: selectedSemester!,
+                                      section: selectedSection!,
+                                      students: students,
+                                    );
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Attendance export failed: $e',
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 },
                               ),
 
@@ -277,7 +290,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                         },
                       );
                     } else {
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(result["data"]["message"])),
                       );
@@ -321,22 +334,24 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                         rethrow;
                       }
 
+                      if (!mounted) return;
+
                       setState(() {
                         attendanceRunning = true;
                       });
 
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Attendance Started")),
                       );
                     } else {
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(result["data"]["message"])),
                       );
                     }
                   } catch (e) {
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(SnackBar(content: Text(e.toString())));

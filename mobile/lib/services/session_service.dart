@@ -75,9 +75,6 @@ class SessionService {
   // SESSION ATTENDANCE COUNT
   // ===========================
   Future<Map<String, dynamic>> getSessionAttendance(String sessionId) async {
-    print(
-      "COUNT URL: ${ApiConstants.baseUrl}/api/attendance/session/$sessionId",
-    );
     final response = await http.get(
       Uri.parse("${ApiConstants.baseUrl}/api/attendance/session/$sessionId"),
     );

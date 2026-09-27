@@ -88,6 +88,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
   Future markAttendance() async {
     await scanForTeacher();
+    if (!mounted) return;
+
     // Check Bluetooth before allowing attendance
     if (bluetoothStatus != "Teacher Found ✅") {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -133,7 +135,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
             onPressed: () async {
               await storage.logout();
 
-              if (!mounted) return;
+              if (!context.mounted) return;
 
               Navigator.pushAndRemoveUntil(
                 context,

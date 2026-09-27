@@ -42,6 +42,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -146,7 +147,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
               const SizedBox(height: 20),
 
               DropdownButtonFormField<String>(
-                value: department,
+                initialValue: department,
                 decoration: const InputDecoration(
                   labelText: "Department",
                   border: OutlineInputBorder(),
@@ -180,7 +181,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
               const SizedBox(height: 20),
 
               DropdownButtonFormField<String>(
-                value: section,
+                initialValue: section,
 
                 decoration: const InputDecoration(
                   labelText: "Section",
@@ -235,16 +236,18 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
                                   section: section!,
                                 );
 
+                            if (!mounted) return;
+
                             setState(() {
                               loading = false;
                             });
-
-                            if (!mounted) return;
 
                             if (response["success"] == true) {
                               await storage.saveRole("student");
                               await storage.setLoggedIn(true);
                               await storage.saveUserData(response["student"]);
+
+                              if (!context.mounted) return;
 
                               Navigator.pushAndRemoveUntil(
                                 context,
@@ -256,14 +259,20 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
                                 (route) => false,
                               );
                             } else {
+                              if (!context.mounted) return;
+
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(response["message"])),
                               );
                             }
                           } catch (e) {
+                            if (!mounted) return;
+
                             setState(() {
                               loading = false;
                             });
+
+                            if (!context.mounted) return;
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

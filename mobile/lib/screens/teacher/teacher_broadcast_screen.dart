@@ -56,14 +56,20 @@ class _TeacherBroadcastScreenState extends State<TeacherBroadcastScreen> {
                 try {
                   await bleService.startBroadcast();
 
+                  if (!mounted) return;
+
                   setState(() {
                     isBroadcasting = true;
                   });
+
+                  if (!context.mounted) return;
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("BLE Broadcasting Started")),
                   );
                 } catch (e) {
+                  if (!context.mounted) return;
+
                   ScaffoldMessenger.of(
                     context,
                   ).showSnackBar(SnackBar(content: Text("Error: $e")));
@@ -79,9 +85,13 @@ class _TeacherBroadcastScreenState extends State<TeacherBroadcastScreen> {
               onPressed: () async {
                 await bleService.stopBroadcast();
 
+                if (!mounted) return;
+
                 setState(() {
                   isBroadcasting = false;
                 });
+
+                if (!context.mounted) return;
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("BLE Broadcasting Stopped")),

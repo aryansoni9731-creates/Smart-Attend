@@ -61,6 +61,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         await storage.setLoggedIn(true);
         await storage.saveUserData(response["teacher"]);
 
+        if (!mounted) return;
+
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (_) => const TeacherDashboardScreen()),
@@ -72,11 +74,11 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
         ).showSnackBar(SnackBar(content: Text(response["message"])));
       }
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         loading = false;
       });
-
-      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.toString())));
@@ -148,7 +150,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
               const SizedBox(height: 20),
 
               DropdownButtonFormField<String>(
-                value: department,
+                initialValue: department,
                 decoration: const InputDecoration(
                   labelText: "Department",
                   border: OutlineInputBorder(),

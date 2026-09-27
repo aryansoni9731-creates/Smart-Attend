@@ -40,11 +40,11 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
         password: passwordController.text.trim(),
       );
 
+      if (!mounted) return;
+
       setState(() {
         isLoading = false;
       });
-
-      if (!mounted) return;
 
       if (response["statusCode"] == 200) {
         final student = response["data"]["student"];
@@ -54,6 +54,8 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
         await storage.setLoggedIn(true);
 
         await storage.saveUserData(student);
+
+        if (!mounted) return;
 
         ScaffoldMessenger.of(
           context,
@@ -71,11 +73,11 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
         ).showSnackBar(SnackBar(content: Text(response["data"]["message"])));
       }
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         isLoading = false;
       });
-
-      if (!mounted) return;
 
       ScaffoldMessenger.of(
         context,
