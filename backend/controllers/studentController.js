@@ -20,27 +20,6 @@ const registerStudent = async (req, res) => {
   }
 };
 
-// ==========================
-// LOGIN STUDENT
-// ==========================
-const loginStudent = async (req, res) => {
-  try {
-    const result = await studentService.loginStudent(req.body);
-
-    if (!result.success) {
-      return res.status(400).json(result);
-    }
-
-    return res.status(200).json(result);
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
 module.exports = {
   registerStudent,
-  loginStudent,
 };
