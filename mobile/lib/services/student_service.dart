@@ -38,16 +38,4 @@ class StudentService {
     return jsonDecode(response.body);
   }
 
-  Future<Map<String, dynamic>> loginStudent({
-    required String enrollmentId,
-    required String password,
-  }) async {
-    final response = await http.post(
-      Uri.parse("${ApiConstants.baseUrl}/api/student/login"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"enrollmentId": enrollmentId, "password": password}),
-    );
-
-    return jsonDecode(response.body);
-  }
 }

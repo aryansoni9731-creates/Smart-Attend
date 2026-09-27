@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Teacher = require("../models/Teacher");
-const { JWT_SECRET } = require("../middleware/authMiddleware");
+const { JWT_SECRET } = require("../config/auth");
 
 const registerTeacher = async (req, res) => {
   try {

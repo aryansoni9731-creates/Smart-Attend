@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 const DeviceLock = require("../models/DeviceLock");
 const AttendanceSession = require("../models/AttendanceSession");
 const Student = require("../models/Student");
-const Teacher = require("../models/Teacher");
-const { JWT_SECRET } = require("../middleware/authMiddleware");
+const { JWT_SECRET } = require("../config/auth");
 
 const loginStudent = async (req, res) => {
   try {
@@ -80,54 +79,6 @@ const loginStudent = async (req, res) => {
   }
 };
 
-const loginTeacher = async (req, res) => {
-  try {
-    const { teacherId, password } = req.body;
-
-    const teacher = await Teacher.findOne({ teacherId });
-    if (!teacher) {
-      return res.status(404).json({
-        success: false,
-        message: "Teacher not found with this ID",
-      });
-    }
-
-    const isMatch = await bcrypt.compare(password, teacher.password);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid credentials",
-      });
-    }
-
-    const teacherData = {
-      _id: teacher._id,
-      teacherId: teacher.teacherId,
-      name: teacher.name,
-      department: teacher.department,
-    };
-
-    const token = jwt.sign(
-      { id: teacher._id, role: "teacher", teacherId: teacher.teacherId },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Teacher login successful",
-      token,
-      teacher: teacherData,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
 module.exports = {
   loginStudent,
-  loginTeacher,
 };

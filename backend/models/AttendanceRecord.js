@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const AttendanceRecord = require("../models/AttendanceRecord");
 
 const attendanceRecordSchema = new mongoose.Schema(
   {

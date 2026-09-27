@@ -55,9 +55,6 @@ class SmartBluetoothService {
   List<ScanResult> _lastTeacherDevices = const [];
   Future<BleVerification>? _activeVerification;
 
-  /// Requests only permissions needed by a student device to scan.
-  Future<void> requestPermissions() => _requestScanPermissions();
-
   Future<void> _requestScanPermissions() async {
     final statuses = await [
       Permission.bluetoothScan,
