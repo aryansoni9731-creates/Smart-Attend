@@ -15,6 +15,7 @@ class BleBroadcastService {
       Permission.bluetoothAdvertise,
       Permission.bluetoothConnect,
     ].request();
+
     if (permissions.values.any((status) => !status.isGranted)) {
       throw StateError(
         'Bluetooth advertising permission is required to start attendance.',
@@ -22,16 +23,22 @@ class BleBroadcastService {
     }
 
     try {
-
       final advertiseData = AdvertiseData(
         serviceUuid: serviceUuid,
         includeDeviceName: true,
       );
 
-      await _ble.start(advertiseData: advertiseData);
+      await _ble.start(
+        advertiseData: advertiseData,
+        advertiseSettings: AdvertiseSettings(
+          advertiseSet: false,
+          advertiseMode: AdvertiseMode.advertiseModeLowLatency,
+          connectable: false,
+          txPowerLevel: AdvertiseTxPower.advertiseTxPowerLow,
+        ),
+      );
 
       _isBroadcasting = true;
-
     } catch (e) {
       _isBroadcasting = false;
       throw StateError('Could not start the Bluetooth attendance beacon: $e');
