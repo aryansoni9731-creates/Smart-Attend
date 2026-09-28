@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'constants/api_constants.dart';
 import 'screens/splash/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ApiConstants.loadBaseUrl();
   runApp(const SmartAttendApp());
 }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../student/student_dashboard_screen.dart';
 import '../../services/auth_service.dart';
 import '../../services/local_storage_service.dart';
+import '../../widgets/server_settings_dialog.dart';
+import '../student/student_register_screen.dart';
 
 class StudentLoginScreen extends StatefulWidget {
   const StudentLoginScreen({super.key});
@@ -88,7 +90,17 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Student Login"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Student Login"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -126,6 +138,20 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text("Login", style: TextStyle(fontSize: 18)),
               ),
+            ),
+
+            const SizedBox(height: 16),
+
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const StudentRegisterScreen(),
+                  ),
+                );
+              },
+              child: const Text("Don't have an account? Register here"),
             ),
           ],
         ),

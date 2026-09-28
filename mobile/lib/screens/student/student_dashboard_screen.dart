@@ -4,6 +4,7 @@ import '../../services/session_service.dart';
 import '../../services/attendance_service.dart';
 import '../../services/bluetooth_service.dart';
 import '../../services/local_storage_service.dart';
+import '../../widgets/server_settings_dialog.dart';
 import '../auth/role_selection_screen.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
@@ -130,6 +131,11 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
         title: const Text("SmartAttend"),
         centerTitle: true,
         actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {

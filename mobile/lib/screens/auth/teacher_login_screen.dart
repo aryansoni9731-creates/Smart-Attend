@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../services/local_storage_service.dart';
 import '../../services/teacher_service.dart';
 import '../teacher/teacher_dashboard_screen.dart';
+import '../teacher/teacher_register_screen.dart';
+import '../../widgets/server_settings_dialog.dart';
 
 class TeacherLoginScreen extends StatefulWidget {
   const TeacherLoginScreen({super.key});
@@ -82,7 +84,17 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Teacher Login"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Teacher Login"),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -142,6 +154,18 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                         )
                       : const Text("LOGIN", style: TextStyle(fontSize: 16)),
                 ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TeacherRegisterScreen(),
+                    ),
+                  );
+                },
+                child: const Text("Don't have an account? Register here"),
               ),
             ],
           ),

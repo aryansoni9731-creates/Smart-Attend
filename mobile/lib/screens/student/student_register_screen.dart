@@ -4,6 +4,8 @@ import '../../services/local_storage_service.dart';
 import '../student/student_dashboard_screen.dart';
 import 'package:flutter/services.dart';
 import '../../constants/department_constants.dart';
+import '../../widgets/server_settings_dialog.dart';
+import '../auth/student_login_screen.dart';
 
 class StudentRegisterScreen extends StatefulWidget {
   const StudentRegisterScreen({super.key});
@@ -48,6 +50,13 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
       appBar: AppBar(
         title: const Text("Student Registration"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
+        ],
       ),
 
       body: SingleChildScrollView(
@@ -292,6 +301,20 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
                           ),
                         ),
                 ),
+              ),
+
+              const SizedBox(height: 16),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const StudentLoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text("Already registered? Login here"),
               ),
             ],
           ),

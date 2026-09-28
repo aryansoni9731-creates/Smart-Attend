@@ -4,6 +4,8 @@ import '../../services/local_storage_service.dart';
 import '../../services/teacher_service.dart';
 import 'teacher_dashboard_screen.dart';
 import '../../constants/department_constants.dart';
+import '../../widgets/server_settings_dialog.dart';
+import '../auth/teacher_login_screen.dart';
 
 class TeacherRegisterScreen extends StatefulWidget {
   const TeacherRegisterScreen({super.key});
@@ -91,6 +93,13 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
       appBar: AppBar(
         title: const Text("Teacher Registration"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -181,6 +190,20 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text("REGISTER", style: TextStyle(fontSize: 18)),
                 ),
+              ),
+
+              const SizedBox(height: 16),
+
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TeacherLoginScreen(),
+                    ),
+                  );
+                },
+                child: const Text("Already registered? Login here"),
               ),
             ],
           ),

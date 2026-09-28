@@ -5,6 +5,7 @@ import '../../services/session_service.dart';
 import '../../services/ble_broadcast_service.dart';
 import '../../services/local_storage_service.dart';
 import '../../services/excel_export_service.dart';
+import '../../widgets/server_settings_dialog.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
@@ -54,6 +55,11 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
         centerTitle: true,
 
         actions: [
+          IconButton(
+            tooltip: "Server Settings",
+            icon: const Icon(Icons.settings),
+            onPressed: () => ServerSettingsDialog.show(context),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
 
