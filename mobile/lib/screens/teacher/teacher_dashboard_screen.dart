@@ -358,9 +358,16 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
                     }
                   } catch (e) {
                     if (!context.mounted) return;
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          e
+                              .toString()
+                              .replaceAll("Bad state: ", "")
+                              .replaceAll("Exception: ", ""),
+                        ),
+                      ),
+                    );
                   }
                 },
                 child: Text(

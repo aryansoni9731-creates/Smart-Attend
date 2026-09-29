@@ -1,4 +1,5 @@
 import 'package:flutter_ble_peripheral/flutter_ble_peripheral.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BleBroadcastService {
@@ -22,10 +23,25 @@ class BleBroadcastService {
       );
     }
 
+    final isBluetoothOn =
+        await FlutterBluePlus.adapterState.first == BluetoothAdapterState.on;
+    if (!isBluetoothOn) {
+      throw StateError(
+        'Bluetooth is turned off on this phone. Please turn on Bluetooth.',
+      );
+    }
+
+    final isSupported = await _ble.isSupported;
+    if (!isSupported) {
+      throw StateError(
+        'This device hardware does not support BLE Peripheral advertising.',
+      );
+    }
+
     try {
       final advertiseData = AdvertiseData(
         serviceUuid: serviceUuid,
-        includeDeviceName: true,
+        includeDeviceName: false,
       );
 
       await _ble.start(
@@ -33,8 +49,9 @@ class BleBroadcastService {
         advertiseSettings: AdvertiseSettings(
           advertiseSet: false,
           advertiseMode: AdvertiseMode.advertiseModeLowLatency,
-          connectable: false,
-          txPowerLevel: AdvertiseTxPower.advertiseTxPowerLow,
+          connectable: true,
+          timeout: 0, // 0 = continuous advertising (default was 400ms!)
+          txPowerLevel: AdvertiseTxPower.advertiseTxPowerHigh,
         ),
       );
 

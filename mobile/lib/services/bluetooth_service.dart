@@ -56,16 +56,28 @@ class SmartBluetoothService {
   Future<BleVerification>? _activeVerification;
 
   Future<void> _requestScanPermissions() async {
-    final statuses = await [
-      Permission.bluetoothScan,
-      Permission.bluetoothConnect,
+    final permissions = <Permission>[
       Permission.locationWhenInUse,
-    ].request();
+    ];
 
-    if (statuses.values.any((status) => !status.isGranted)) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      permissions.addAll([
+        Permission.bluetoothScan,
+        Permission.bluetoothConnect,
+      ]);
+    }
+
+    final statuses = await permissions.request();
+
+    final locationGranted =
+        statuses[Permission.locationWhenInUse]?.isGranted ?? false;
+    final scanGranted =
+        statuses[Permission.bluetoothScan]?.isGranted ?? true;
+
+    if (!locationGranted && !scanGranted) {
       throw const BleVerificationException(
-        'Bluetooth permission is required to verify attendance. '
-        'Grant it in Settings and try again.',
+        'Bluetooth and Location permissions are required to verify attendance. '
+        'Grant them in Settings and try again.',
       );
     }
   }
@@ -94,8 +106,26 @@ class SmartBluetoothService {
   }
 
   Future<BleVerification> _scanForTeacher(Duration timeout) async {
+    if (!await FlutterBluePlus.isSupported) {
+      throw const BleVerificationException(
+        'Bluetooth is not supported on this device.',
+      );
+    }
+
     if (!await isBluetoothOn()) {
-      throw const BleVerificationException('Bluetooth is turned off.');
+      throw const BleVerificationException(
+        'Bluetooth is turned off. Please turn on Bluetooth.',
+      );
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final isLocationServiceOn =
+          await Permission.location.serviceStatus.isEnabled;
+      if (!isLocationServiceOn) {
+        throw const BleVerificationException(
+          'Location (GPS) is turned off. Please enable Location in Quick Settings.',
+        );
+      }
     }
 
     await _requestScanPermissions();
@@ -103,14 +133,15 @@ class SmartBluetoothService {
 
     final teacherResults = <String, ScanResult>{};
     StreamSubscription<List<ScanResult>>? subscription;
+    final targetGuid = Guid(teacherServiceUuid);
 
     try {
       subscription = FlutterBluePlus.scanResults.listen((results) {
         for (final result in results) {
           final isTeacher = result.advertisementData.serviceUuids.any(
             (uuid) =>
-                uuid.toString().toLowerCase() ==
-                teacherServiceUuid.toLowerCase(),
+                uuid == targetGuid ||
+                uuid.str128.toLowerCase() == targetGuid.str128.toLowerCase(),
           );
           if (!isTeacher) continue;
 

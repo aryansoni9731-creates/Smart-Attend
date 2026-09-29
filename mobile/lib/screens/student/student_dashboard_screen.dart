@@ -81,8 +81,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     } catch (e) {
       if (!mounted) return;
 
+      final message = e
+          .toString()
+          .replaceAll('Exception: ', '')
+          .replaceAll('BleVerificationException: ', '');
+
       setState(() {
-        bluetoothStatus = "Teacher Not Found ❌";
+        bluetoothStatus = message;
       });
     }
   }
@@ -93,11 +98,13 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
 
     // Check Bluetooth before allowing attendance
     if (bluetoothStatus != "Teacher Found ✅") {
+      final hint = bluetoothStatus == "Teacher Not Found ❌"
+          ? "Teacher beacon not detected. Ensure teacher has started attendance, turn on Bluetooth & Location (GPS), and move closer."
+          : bluetoothStatus;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Teacher not detected. Turn on Bluetooth and move closer.",
-          ),
+        SnackBar(
+          content: Text(hint),
         ),
       );
       return;
